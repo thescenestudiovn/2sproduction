@@ -1862,10 +1862,10 @@
               <span class="fab-item-icon">${ICON_ZALO_SVG}</span>
               <span>Zalo: ${s.phoneDisplay}</span>
             </a>
-            <a href="mailto:${s.email}" class="fab-item fab-item-email" title="${isVi ? 'Gửi Email báo giá dự án' : 'Send Email'}">
+            <button type="button" class="fab-item fab-item-email" data-action="go-contact-inquiry" title="${isVi ? 'Nhập thông tin gửi yêu cầu báo giá tới ' + s.email : 'Submit inquiry to ' + s.email}" style="cursor:pointer;outline:none;border:1px solid rgba(214, 183, 121, 0.35);text-align:left;background:rgba(14, 24, 38, 0.94);color:#FFFFFF">
               <span class="fab-item-icon">${ICON_EMAIL_SVG}</span>
               <span>Email: ${s.email}</span>
-            </a>
+            </button>
           </div>
 
           <button type="button" class="floating-fab-trigger" data-action="toggle-contact-dock" aria-label="Tư vấn nhanh" title="${isVi ? 'Liên hệ & Tư vấn nhanh' : 'Quick Concierge'}">
@@ -3971,45 +3971,53 @@
                   </button>
 
                   ${state.quoteSuccess && state.lastInquiry ? `
-                    <div style="margin-top:16px;padding:18px 20px;border-radius:8px;background:#ECFDF5;border:1px solid #10B981;box-shadow:0 4px 14px rgba(16,185,129,0.12)">
+                    <div style="margin-top:16px;padding:18px 20px;border-radius:10px;background:#ECFDF5;border:1px solid #10B981;box-shadow:0 4px 14px rgba(16,185,129,0.12)">
                       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-                        <span style="font-size:1.3rem">🎉</span>
+                        <span style="font-size:1.3rem">✅</span>
                         <strong style="color:#065F46;font-size:1rem">
                           ${isVi ? 'ĐÃ TIẾP NHẬN YÊU CẦU BÁO GIÁ THÀNH CÔNG!' : 'INQUIRY SUBMITTED SUCCESSFULLY!'}
                         </strong>
                       </div>
-                      <p style="color:#047857;font-size:0.86rem;line-height:1.6;margin:0 0 14px">
+                      <p style="color:#047857;font-size:0.88rem;line-height:1.6;margin:0 0 12px">
                         ${isVi
-                          ? 'Cảm ơn quý công ty <strong>' + state.lastInquiry.company + '</strong> (' + state.lastInquiry.name + ' • ' + state.lastInquiry.phone + '). Yêu cầu đã được lưu vào hệ thống quản trị của 2S PRODUCTION.'
-                          : 'Thank you <strong>' + state.lastInquiry.company + '</strong>. Our production team has received your brief.'}
+                          ? 'Toàn bộ nội dung yêu cầu báo giá của quý doanh nghiệp <strong>' + state.lastInquiry.company + '</strong> (' + state.lastInquiry.name + ' • ' + state.lastInquiry.phone + ') đã được chuyển trực tiếp tới hòm thư quản trị <strong>' + s.email + '</strong>.'
+                          : 'Your event inquiry details from <strong>' + state.lastInquiry.company + '</strong> have been delivered directly to <strong>' + s.email + '</strong>.'}
                       </p>
-
-                      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-top:10px;border-top:1px dashed rgba(16,185,129,0.3)">
+                      <div style="background:#FFFFFF;border:1px solid rgba(16,185,129,0.25);border-radius:8px;padding:12px 14px;font-size:0.82rem;color:#1E293B;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 14px;margin-bottom:12px">
+                        <div>🏢 <strong>Doanh nghiệp:</strong> ${state.lastInquiry.company}</div>
+                        <div>👤 <strong>Liên hệ:</strong> ${state.lastInquiry.name}</div>
+                        <div>📞 <strong>Điện thoại:</strong> ${state.lastInquiry.phone}</div>
+                        <div>✉️ <strong>Email gửi báo giá:</strong> ${state.lastInquiry.email}</div>
+                        <div>🎯 <strong>Dịch vụ:</strong> ${state.lastInquiry.service}</div>
+                        <div>📬 <strong>Email tiếp nhận:</strong> <span style="color:#0284C7;font-weight:700">${s.email}</span></div>
+                      </div>
+                      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
                         <a
                           href="mailto:${s.email}?subject=${encodeURIComponent('[YÊU CẦU BÁO GIÁ] ' + state.lastInquiry.company + ' - ' + state.lastInquiry.name)}&body=${encodeURIComponent(
-                            'Kính gửi Ban Dự Án 2S PRODUCTION,\n\n' +
-                            'Tôi vừa gửi yêu cầu báo giá từ website 2Sproduction.com:\n' +
-                            '• Công ty / Doanh nghiệp: ' + state.lastInquiry.company + '\n' +
-                            '• Người liên hệ: ' + state.lastInquiry.name + '\n' +
-                            '• Số điện thoại: ' + state.lastInquiry.phone + '\n' +
-                            '• Email: ' + state.lastInquiry.email + '\n' +
-                            '• Dịch vụ quan tâm: ' + state.lastInquiry.service + '\n' +
-                            '• Ghi chú / Yêu cầu chi tiết: ' + state.lastInquiry.note + '\n\n' +
-                            'Rất mong nhận được phản hồi và dự toán chi tiết từ quý công ty.\nTrân trọng!'
+                            'Kính gửi Ban Quản Trị 2S PRODUCTION,\n\n' +
+                            'Tôi vừa gửi yêu cầu báo giá từ website:\n' +
+                            '• Doanh nghiệp / Tổ chức: ' + state.lastInquiry.company + '\n' +
+                            '• Người liên hệ & Chức vụ: ' + state.lastInquiry.name + '\n' +
+                            '• Số điện thoại / Zalo: ' + state.lastInquiry.phone + '\n' +
+                            '• Email khách hàng: ' + state.lastInquiry.email + '\n' +
+                            '• Loại hình sự kiện: ' + state.lastInquiry.service + '\n' +
+                            '• Yêu cầu chi tiết: ' + (state.lastInquiry.note || 'Không có ghi chú thêm') + '\n' +
+                            '• Thời gian gửi: ' + state.lastInquiry.time + '\n\n' +
+                            'Rất mong nhận được phản hồi sớm từ quý công ty.\nTrân trọng!'
                           )}"
                           class="btn-ystg btn-ystg-gold btn-ystg-sm"
-                          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px"
+                          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:0.82rem"
                         >
-                          <span>✉️</span> Bấm Để Gửi Xác Nhận Ngay Qua Email (${s.email})
+                          <span>✉️</span> Mở ứng dụng Email gửi trực tiếp tới ${s.email}
                         </a>
                         <a
                           href="https://zalo.me/${s.zalo}"
                           target="_blank"
                           rel="noopener"
                           class="btn-ystg btn-ystg-navy btn-ystg-sm"
-                          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px"
+                          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:0.82rem"
                         >
-                          <span>💬</span> Chat Zalo Trực Tiếp: ${s.phoneDisplay}
+                          <span>💬</span> Nhắn Zalo: ${s.phoneDisplay}
                         </a>
                       </div>
                     </div>
@@ -4922,8 +4930,10 @@
         const origText = submitBtn ? submitBtn.innerHTML : '';
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.innerHTML = '⏳ Đang gửi yêu cầu & thông báo email...';
+          submitBtn.innerHTML = '⏳ Đang gửi yêu cầu...';
         }
+
+        const targetEmail = (cms.settings && cms.settings.email) ? cms.settings.email.trim() : '2splannervn@gmail.com';
 
         const inquiryData = {
           time: new Date().toLocaleString('vi-VN'),
@@ -4932,7 +4942,8 @@
           phone: document.getElementById('inqPhone').value.trim(),
           email: document.getElementById('inqEmail').value.trim(),
           service: document.getElementById('inqService').value,
-          note: document.getElementById('inqNote').value.trim()
+          note: document.getElementById('inqNote').value.trim(),
+          targetEmail: targetEmail
         };
 
         // 1. Luôn lưu vào LocalStorage CMS để Admin luôn xem được
@@ -4960,7 +4971,7 @@
         state.quoteSuccess = true;
         state.emailSent = backendSent;
         render();
-        showCmsToast('Đã tiếp nhận yêu cầu báo giá của ' + inquiryData.company + '!');
+        showCmsToast('✔ Đã gửi yêu cầu thành công tới ' + targetEmail + '!');
       });
 
       document.getElementById('adminLoginForm')?.addEventListener('submit', e => {
@@ -5483,6 +5494,25 @@
       if (action === 'toggle-contact-dock') {
         const fab = document.getElementById('floatingFabContainer');
         if (fab) fab.classList.toggle('open');
+        return;
+      }
+
+      if (action === 'go-contact-inquiry') {
+        const fab = document.getElementById('floatingFabContainer');
+        if (fab) fab.classList.remove('open');
+        navigate('contact');
+        setTimeout(() => {
+          const formEl = document.getElementById('contactInquiryForm');
+          if (formEl) {
+            formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const inqComp = document.getElementById('inqCompany');
+            if (inqComp) {
+              inqComp.focus();
+              inqComp.style.boxShadow = '0 0 0 3px rgba(214,183,121,0.6)';
+              setTimeout(() => { inqComp.style.boxShadow = ''; }, 2000);
+            }
+          }
+        }, 120);
         return;
       }
 

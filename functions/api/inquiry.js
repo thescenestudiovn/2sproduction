@@ -18,7 +18,7 @@ export async function onRequestPost(context) {
     }
 
     const timestamp = time || new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
-    const targetEmail = env.ADMIN_EMAIL || '2splannervn@gmail.com';
+    const targetEmail = data.targetEmail || env.ADMIN_EMAIL || '2splannervn@gmail.com';
 
     // 1. LƯU VÀO CLOUDFLARE KV (NẾU CÓ BINDING CMS_KV)
     if (env.CMS_KV) {
