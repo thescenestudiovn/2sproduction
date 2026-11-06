@@ -129,6 +129,7 @@
         legalNameEn: '2S PLANNER CO., LTD',
         enterpriseId: '0402294649',
         email: '2splannervn@gmail.com',
+        web3formsKey: '',
         phone: '0905942274',
         phoneDisplay: '0905 942 274',
         zalo: '0905942274',
@@ -4729,6 +4730,14 @@
               <input type="text" id="setAddress" required class="admin-input" value="${s.addressVi}" />
             </div>
 
+            <div class="admin-field">
+              <label>Khóa Gửi Email Tự Động (Web3Forms Access Key - Nhận miễn phí tại web3forms.com)</label>
+              <input type="text" id="setWeb3FormsKey" class="admin-input" value="${s.web3formsKey || ''}" placeholder="Nhập Access Key từ web3forms.com để kích hoạt gửi email tự động 100%" />
+              <div style="font-size:0.75rem;color:var(--text-silver);margin-top:4px;line-height:1.4">
+                💡 <em>Để email gửi thẳng vào hộp thư Inbox mà không cần máy chủ:</em> Vào <a href="https://web3forms.com" target="_blank" style="color:var(--accent-champagne);text-decoration:underline">web3forms.com</a>, nhập email của bạn để nhận Access Key miễn phí trong 5 giây, rồi dán vào ô này và Lưu.
+              </div>
+            </div>
+
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
               <div class="admin-field">
                 <label>Tài Khoản Đăng Nhập Admin</label>
@@ -4918,30 +4927,49 @@
         cms.inquiries.unshift(inquiryData);
         saveCMSData(cms);
 
-        // 2. Gửi email trực tiếp qua FormSubmit AJAX tới targetEmail (hoạt động ngay cả ở local và web)
-        try {
-          await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(targetEmail), {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              _subject: '[2S PRODUCTION] Yêu cầu báo giá từ ' + inquiryData.company + ' - ' + inquiryData.name + ' (' + inquiryData.phone + ')',
-              _replyto: inquiryData.email,
-              _template: 'table',
-              _captcha: 'false',
-              'Doanh Nghiệp / Khách Hàng': inquiryData.company,
-              'Người Liên Hệ & Chức Vụ': inquiryData.name,
-              'Số Điện Thoại / Zalo': inquiryData.phone,
-              'Email Khách Hàng': inquiryData.email,
-              'Loại Hình Sự Kiện': inquiryData.service,
-              'Quy Mô / Địa Điểm / Yêu Cầu': inquiryData.note || '(Không có)',
-              'Thời Gian Gửi': inquiryData.time
-            })
-          });
-        } catch (fsErr) {
-          console.log('FormSubmit fetch notice:', fsErr);
+        // 2. Gửi email thật qua Web3Forms (nếu có Key) hoặc ShipMyForm / FormSubmit
+        const w3Key = (cms.settings && cms.settings.web3formsKey) ? cms.settings.web3formsKey.trim() : '';
+        if (w3Key) {
+          try {
+            await fetch('https://api.web3forms.com/submit', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify({
+                access_key: w3Key,
+                subject: '[YÊU CẦU BÁO GIÁ] ' + inquiryData.company + ' - ' + inquiryData.name + ' (' + inquiryData.phone + ')',
+                from_name: '2S Production Website',
+                company: inquiryData.company,
+                name: inquiryData.name,
+                phone: inquiryData.phone,
+                email: inquiryData.email,
+                service: inquiryData.service,
+                message: inquiryData.note || '(Không có ghi chú thêm)',
+                time: inquiryData.time
+              })
+            });
+          } catch (w3Err) {
+            console.log('Web3Forms notice:', w3Err);
+          }
+        } else {
+          // Gửi qua ShipMyForm / FormSubmit dự phòng
+          try {
+            await fetch('https://shipmyform.com/to/' + encodeURIComponent(targetEmail), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify({
+                _subject: '[2S PRODUCTION] Yêu cầu báo giá từ ' + inquiryData.company + ' - ' + inquiryData.name,
+                _replyto: inquiryData.email,
+                'Công Ty': inquiryData.company,
+                'Người Liên Hệ': inquiryData.name,
+                'Điện Thoại': inquiryData.phone,
+                'Email Khách': inquiryData.email,
+                'Dịch Vụ': inquiryData.service,
+                'Ghi Chú': inquiryData.note || 'Không có'
+              })
+            });
+          } catch (smErr) {
+            console.log('ShipMyForm notice:', smErr);
+          }
         }
 
         // 3. Gửi qua Backend Cloudflare Pages Function /api/inquiry (khi chạy trên Cloudflare Pages)
@@ -4990,6 +5018,7 @@
         cms.settings.email = document.getElementById('setEmail').value.trim();
         cms.settings.enterpriseId = document.getElementById('setEnterpriseId').value.trim();
         cms.settings.addressVi = document.getElementById('setAddress').value.trim();
+        cms.settings.web3formsKey = document.getElementById('setWeb3FormsKey')?.value.trim() || '';
         cms.settings.adminUser = document.getElementById('setAdminUser').value.trim();
         cms.settings.adminPass = document.getElementById('setAdminPass').value.trim();
         saveCMSData(cms);
