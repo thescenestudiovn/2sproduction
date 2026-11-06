@@ -1532,6 +1532,8 @@
       adminTab: 'home',
       loginError: '',
       quoteSuccess: false,
+      lastInquiry: null,
+      emailSent: false,
       adminNotice: '',
       pendingUploadCallback: null
     };
@@ -3830,9 +3832,48 @@
                     ${isVi ? 'GỬI YÊU CẦU BÁO GIÁ SỰ KIỆN ↗' : 'SUBMIT EVENT BRIEF TO 2S PRODUCTION ↗'}
                   </button>
 
-                  ${state.quoteSuccess ? `
-                    <div style="margin-top:12px;padding:12px;border-radius:6px;background:#D1FAE5;border:1px solid #10B981;color:#065F46;font-size:0.84rem;font-weight:600">
-                      ✔ ${isVi ? 'Đã gửi yêu cầu thành công! Bộ phận Dự án của 2S PRODUCTION sẽ liên hệ với quý công ty ngay.' : 'Inquiry sent successfully! Our production directors will contact you shortly.'}
+                  ${state.quoteSuccess && state.lastInquiry ? `
+                    <div style="margin-top:16px;padding:18px 20px;border-radius:8px;background:#ECFDF5;border:1px solid #10B981;box-shadow:0 4px 14px rgba(16,185,129,0.12)">
+                      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                        <span style="font-size:1.3rem">🎉</span>
+                        <strong style="color:#065F46;font-size:1rem">
+                          ${isVi ? 'ĐÃ TIẾP NHẬN YÊU CẦU BÁO GIÁ THÀNH CÔNG!' : 'INQUIRY SUBMITTED SUCCESSFULLY!'}
+                        </strong>
+                      </div>
+                      <p style="color:#047857;font-size:0.86rem;line-height:1.6;margin:0 0 14px">
+                        ${isVi
+                          ? 'Cảm ơn quý công ty <strong>' + state.lastInquiry.company + '</strong> (' + state.lastInquiry.name + ' • ' + state.lastInquiry.phone + '). Yêu cầu đã được lưu vào hệ thống quản trị của 2S PRODUCTION.'
+                          : 'Thank you <strong>' + state.lastInquiry.company + '</strong>. Our production team has received your brief.'}
+                      </p>
+
+                      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-top:10px;border-top:1px dashed rgba(16,185,129,0.3)">
+                        <a
+                          href="mailto:${s.email}?subject=${encodeURIComponent('[YÊU CẦU BÁO GIÁ] ' + state.lastInquiry.company + ' - ' + state.lastInquiry.name)}&body=${encodeURIComponent(
+                            'Kính gửi Ban Dự Án 2S PRODUCTION,\n\n' +
+                            'Tôi vừa gửi yêu cầu báo giá từ website 2Sproduction.com:\n' +
+                            '• Công ty / Doanh nghiệp: ' + state.lastInquiry.company + '\n' +
+                            '• Người liên hệ: ' + state.lastInquiry.name + '\n' +
+                            '• Số điện thoại: ' + state.lastInquiry.phone + '\n' +
+                            '• Email: ' + state.lastInquiry.email + '\n' +
+                            '• Dịch vụ quan tâm: ' + state.lastInquiry.service + '\n' +
+                            '• Ghi chú / Yêu cầu chi tiết: ' + state.lastInquiry.note + '\n\n' +
+                            'Rất mong nhận được phản hồi và dự toán chi tiết từ quý công ty.\nTrân trọng!'
+                          )}"
+                          class="btn-ystg btn-ystg-gold btn-ystg-sm"
+                          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px"
+                        >
+                          <span>✉️</span> Bấm Để Gửi Xác Nhận Ngay Qua Email (${s.email})
+                        </a>
+                        <a
+                          href="https://zalo.me/${s.zalo}"
+                          target="_blank"
+                          rel="noopener"
+                          class="btn-ystg btn-ystg-navy btn-ystg-sm"
+                          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px"
+                        >
+                          <span>💬</span> Chat Zalo Trực Tiếp: ${s.phoneDisplay}
+                        </a>
+                      </div>
                     </div>
                   ` : ''}
                 </form>
@@ -4469,39 +4510,64 @@
     }
 
     function renderAdminInquiriesTab() {
+      const s = cms.settings;
       return `
-        <h2 style="font-size:1.35rem;font-weight:800;text-transform:uppercase;margin-bottom:8px;color:var(--text-ivory)">
-          Hộp Thư Yêu Cầu Báo Giá Từ Khách Hàng (${cms.inquiries.length})
-        </h2>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+          <div>
+            <h2 style="font-size:1.35rem;font-weight:800;text-transform:uppercase;margin:0 0 4px;color:var(--text-ivory)">
+              Hộp Thư Yêu Cầu Báo Giá Từ Khách Hàng (${cms.inquiries.length})
+            </h2>
+            <p style="color:var(--text-silver);font-size:0.82rem;margin:0">
+              Mọi yêu cầu gửi từ form trên web đều được lưu tự động tại đây và gửi thông báo tới <strong>${s.email}</strong>.
+            </p>
+          </div>
+          <div style="background:rgba(214,183,121,0.12);border:1px solid rgba(214,183,121,0.3);padding:6px 14px;border-radius:6px;font-size:0.78rem;color:#D6B779">
+            ✉️ Email nhận thông báo: <strong>${s.email}</strong>
+          </div>
+        </div>
+
         ${cms.inquiries.length === 0 ? `
-          <div style="padding:32px;background:rgba(16,30,54,0.82);border:1px solid var(--border-line);text-align:center;color:var(--text-silver);margin-top:16px;font-size:0.84rem">
-            Chưa có yêu cầu báo giá mới nào.
+          <div style="padding:40px;background:rgba(16,30,54,0.82);border:1px solid var(--border-line);text-align:center;color:var(--text-silver);margin-top:16px;border-radius:6px">
+            <div style="font-size:2rem;margin-bottom:8px">📭</div>
+            <strong style="color:var(--text-ivory);display:block;margin-bottom:4px">Chưa có yêu cầu báo giá mới nào</strong>
+            <span style="font-size:0.82rem">Khi khách gửi thông tin qua form liên hệ trên trang web, dữ liệu sẽ tự động xuất hiện tại bảng này.</span>
           </div>
         ` : `
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Thời Gian</th>
+                <th style="width:110px">Thời Gian</th>
                 <th>Công Ty & Người Liên Hệ</th>
                 <th>SĐT / Email</th>
-                <th>Dịch Vụ Quan Tâm & Ghi Chú</th>
+                <th>Dịch Vụ & Yêu Cầu</th>
+                <th style="width:200px">Thao Tác Nhanh</th>
               </tr>
             </thead>
             <tbody>
-              ${cms.inquiries.map(inq => `
+              ${cms.inquiries.map((inq, inqIdx) => `
                 <tr>
-                  <td style="font-size:0.76rem;color:var(--text-silver)">${inq.time}</td>
+                  <td style="font-size:0.75rem;color:var(--text-silver);line-height:1.4">${inq.time}</td>
                   <td>
-                    <strong style="color:var(--text-ivory)">${inq.company}</strong>
-                    <div style="font-size:0.78rem;color:var(--text-silver)">${inq.name}</div>
+                    <strong style="color:var(--text-ivory);font-size:0.92rem;display:block">${inq.company}</strong>
+                    <div style="font-size:0.78rem;color:var(--text-silver)">👤 ${inq.name}</div>
                   </td>
                   <td>
-                    <a href="tel:${inq.phone}" style="color:var(--accent-champagne);font-weight:700">${inq.phone}</a>
-                    <div style="font-size:0.76rem">${inq.email || ''}</div>
+                    <a href="tel:${inq.phone}" style="color:var(--accent-champagne);font-weight:700;font-size:0.88rem;text-decoration:none">📞 ${inq.phone}</a>
+                    ${inq.email ? `<div style="font-size:0.75rem;color:var(--text-silver);margin-top:2px">✉️ ${inq.email}</div>` : ''}
                   </td>
-                  <td style="font-size:0.8rem">
-                    <div style="color:var(--text-ivory);font-weight:600">${inq.service}</div>
-                    <div style="color:var(--text-silver)">${inq.note || ''}</div>
+                  <td style="font-size:0.82rem">
+                    <span style="background:rgba(214,183,121,0.15);color:#D6B779;padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700;display:inline-block;margin-bottom:4px">
+                      ${inq.service || 'Tư vấn tổng thể'}
+                    </span>
+                    <div style="color:var(--text-silver);font-size:0.78rem;white-space:pre-wrap;line-height:1.4">${inq.note || '(Không có ghi chú thêm)'}</div>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:4px;flex-wrap:wrap">
+                      <a href="tel:${inq.phone}" class="block-ctrl-btn" style="text-decoration:none" title="Gọi điện">📞 Gọi</a>
+                      <a href="https://zalo.me/${(inq.phone || '').replace(/[^0-9]/g, '')}" target="_blank" rel="noopener" class="block-ctrl-btn" style="text-decoration:none;color:#0068FF;border-color:rgba(0,104,255,0.4)" title="Chat Zalo">💬 Zalo</a>
+                      ${inq.email ? `<a href="mailto:${inq.email}?subject=${encodeURIComponent('[2S PRODUCTION] Phản hồi yêu cầu tổ chức sự kiện của ' + inq.company)}" class="block-ctrl-btn" style="text-decoration:none;color:#10B981;border-color:rgba(16,185,129,0.4)" title="Gửi Email">✉ Mail</a>` : ''}
+                      <button type="button" class="block-ctrl-btn" style="color:#e11d48;border-color:#fda4af" data-action="delete-inquiry" data-idx="${inqIdx}" title="Xóa yêu cầu này">✕</button>
+                    </div>
                   </td>
                 </tr>
               `).join('')}
@@ -4712,20 +4778,51 @@
     }
 
     function bindEvents() {
-      document.getElementById('contactInquiryForm')?.addEventListener('submit', e => {
+      document.getElementById('contactInquiryForm')?.addEventListener('submit', async e => {
         e.preventDefault();
-        cms.inquiries.unshift({
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const origText = submitBtn ? submitBtn.innerHTML : '';
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '⏳ Đang gửi yêu cầu & thông báo email...';
+        }
+
+        const inquiryData = {
           time: new Date().toLocaleString('vi-VN'),
-          company: document.getElementById('inqCompany').value,
-          name: document.getElementById('inqName').value,
-          phone: document.getElementById('inqPhone').value,
-          email: document.getElementById('inqEmail').value,
+          company: document.getElementById('inqCompany').value.trim(),
+          name: document.getElementById('inqName').value.trim(),
+          phone: document.getElementById('inqPhone').value.trim(),
+          email: document.getElementById('inqEmail').value.trim(),
           service: document.getElementById('inqService').value,
-          note: document.getElementById('inqNote').value
-        });
+          note: document.getElementById('inqNote').value.trim()
+        };
+
+        // 1. Luôn lưu vào LocalStorage CMS để Admin luôn xem được
+        cms.inquiries = cms.inquiries || [];
+        cms.inquiries.unshift(inquiryData);
         saveCMSData(cms);
+
+        // 2. Gửi qua Backend Cloudflare Pages Function /api/inquiry (khi chạy trên Cloudflare Pages)
+        let backendSent = false;
+        try {
+          const res = await fetch('/api/inquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(inquiryData)
+          });
+          if (res.ok) {
+            const json = await res.json();
+            if (json.emailSent) backendSent = true;
+          }
+        } catch (fetchErr) {
+          console.log('Backend /api/inquiry chưa khả dụng trong môi trường tĩnh cục bộ');
+        }
+
+        state.lastInquiry = inquiryData;
         state.quoteSuccess = true;
+        state.emailSent = backendSent;
         render();
+        showCmsToast('Đã tiếp nhận yêu cầu báo giá của ' + inquiryData.company + '!');
       });
 
       document.getElementById('adminLoginForm')?.addEventListener('submit', e => {
@@ -5663,6 +5760,15 @@
             render();
           }
         });
+      } else if (action === 'delete-inquiry') {
+        if (!state.isAdminLoggedIn) return;
+        const idx = Number(actEl.getAttribute('data-idx'));
+        if (confirm('Bạn có chắc muốn xóa yêu cầu báo giá này không?')) {
+          cms.inquiries.splice(idx, 1);
+          saveCMSData(cms);
+          render();
+          showCmsToast('Đã xóa yêu cầu báo giá!');
+        }
       } else if (action === 'admin-delete-article') {
         if (!state.isAdminLoggedIn) return;
         const id = actEl.getAttribute('data-id');
