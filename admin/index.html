@@ -3970,55 +3970,22 @@
                     ${isVi ? 'GỬI YÊU CẦU BÁO GIÁ SỰ KIỆN ↗' : 'SUBMIT EVENT BRIEF TO 2S PRODUCTION ↗'}
                   </button>
 
-                  ${state.quoteSuccess && state.lastInquiry ? `
-                    <div style="margin-top:16px;padding:18px 20px;border-radius:10px;background:#ECFDF5;border:1px solid #10B981;box-shadow:0 4px 14px rgba(16,185,129,0.12)">
-                      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                  ${state.quoteSuccess ? `
+                    <div style="margin-top:16px;padding:14px 18px;border-radius:10px;background:#ECFDF5;border:1px solid #10B981;box-shadow:0 4px 12px rgba(16,185,129,0.12)">
+                      <div style="display:flex;align-items:center;gap:10px">
                         <span style="font-size:1.3rem">✅</span>
-                        <strong style="color:#065F46;font-size:1rem">
-                          ${isVi ? 'ĐÃ TIẾP NHẬN YÊU CẦU BÁO GIÁ THÀNH CÔNG!' : 'INQUIRY SUBMITTED SUCCESSFULLY!'}
-                        </strong>
+                        <div style="font-size:0.9rem;color:#065F46;line-height:1.5">
+                          <strong>${isVi ? 'ĐÃ TIẾP NHẬN YÊU CẦU BÁO GIÁ THÀNH CÔNG!' : 'INQUIRY SUBMITTED SUCCESSFULLY!'}</strong><br/>
+                          ${isVi
+                            ? 'Yêu cầu của quý doanh nghiệp <strong>' + (state.lastInquiry ? state.lastInquiry.company : '') + '</strong> đã được chuyển trực tiếp tới email: <strong>' + s.email + '</strong>. Chúng tôi sẽ phản hồi trong vòng 24 giờ.'
+                            : 'Your event inquiry has been delivered directly to <strong>' + s.email + '</strong>. We will reply within 24 hours.'}
+                        </div>
                       </div>
-                      <p style="color:#047857;font-size:0.88rem;line-height:1.6;margin:0 0 12px">
-                        ${isVi
-                          ? 'Toàn bộ nội dung yêu cầu báo giá của quý doanh nghiệp <strong>' + state.lastInquiry.company + '</strong> (' + state.lastInquiry.name + ' • ' + state.lastInquiry.phone + ') đã được chuyển trực tiếp tới hòm thư quản trị <strong>' + s.email + '</strong>.'
-                          : 'Your event inquiry details from <strong>' + state.lastInquiry.company + '</strong> have been delivered directly to <strong>' + s.email + '</strong>.'}
-                      </p>
-                      <div style="background:#FFFFFF;border:1px solid rgba(16,185,129,0.25);border-radius:8px;padding:12px 14px;font-size:0.82rem;color:#1E293B;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 14px;margin-bottom:12px">
-                        <div>🏢 <strong>Doanh nghiệp:</strong> ${state.lastInquiry.company}</div>
-                        <div>👤 <strong>Liên hệ:</strong> ${state.lastInquiry.name}</div>
-                        <div>📞 <strong>Điện thoại:</strong> ${state.lastInquiry.phone}</div>
-                        <div>✉️ <strong>Email gửi báo giá:</strong> ${state.lastInquiry.email}</div>
-                        <div>🎯 <strong>Dịch vụ:</strong> ${state.lastInquiry.service}</div>
-                        <div>📬 <strong>Email tiếp nhận:</strong> <span style="color:#0284C7;font-weight:700">${s.email}</span></div>
-                      </div>
-                      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-                        <a
-                          href="mailto:${s.email}?subject=${encodeURIComponent('[YÊU CẦU BÁO GIÁ] ' + state.lastInquiry.company + ' - ' + state.lastInquiry.name)}&body=${encodeURIComponent(
-                            'Kính gửi Ban Quản Trị 2S PRODUCTION,\n\n' +
-                            'Tôi vừa gửi yêu cầu báo giá từ website:\n' +
-                            '• Doanh nghiệp / Tổ chức: ' + state.lastInquiry.company + '\n' +
-                            '• Người liên hệ & Chức vụ: ' + state.lastInquiry.name + '\n' +
-                            '• Số điện thoại / Zalo: ' + state.lastInquiry.phone + '\n' +
-                            '• Email khách hàng: ' + state.lastInquiry.email + '\n' +
-                            '• Loại hình sự kiện: ' + state.lastInquiry.service + '\n' +
-                            '• Yêu cầu chi tiết: ' + (state.lastInquiry.note || 'Không có ghi chú thêm') + '\n' +
-                            '• Thời gian gửi: ' + state.lastInquiry.time + '\n\n' +
-                            'Rất mong nhận được phản hồi sớm từ quý công ty.\nTrân trọng!'
-                          )}"
-                          class="btn-ystg btn-ystg-gold btn-ystg-sm"
-                          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:0.82rem"
-                        >
-                          <span>✉️</span> Mở ứng dụng Email gửi trực tiếp tới ${s.email}
-                        </a>
-                        <a
-                          href="https://zalo.me/${s.zalo}"
-                          target="_blank"
-                          rel="noopener"
-                          class="btn-ystg btn-ystg-navy btn-ystg-sm"
-                          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:0.82rem"
-                        >
-                          <span>💬</span> Nhắn Zalo: ${s.phoneDisplay}
-                        </a>
+                      <div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(16,185,129,0.3);font-size:0.78rem;color:#047857;display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+                        <span>💡 Muốn đính kèm tài liệu thầu hoặc chat trực tiếp?</span>
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(s.email)}&su=${encodeURIComponent('[HỒ SƠ BỔ SUNG] ' + (state.lastInquiry ? state.lastInquiry.company : ''))}" target="_blank" rel="noopener" style="color:#0284C7;text-decoration:underline;font-weight:700">Mở Gmail trực tiếp ↗</a>
+                        <span>•</span>
+                        <a href="https://zalo.me/${s.zalo}" target="_blank" rel="noopener" style="color:#0284C7;text-decoration:underline;font-weight:700">Chat Zalo: ${s.phoneDisplay} ↗</a>
                       </div>
                     </div>
                   ` : ''}
@@ -4951,7 +4918,33 @@
         cms.inquiries.unshift(inquiryData);
         saveCMSData(cms);
 
-        // 2. Gửi qua Backend Cloudflare Pages Function /api/inquiry (khi chạy trên Cloudflare Pages)
+        // 2. Gửi email trực tiếp qua FormSubmit AJAX tới targetEmail (hoạt động ngay cả ở local và web)
+        try {
+          await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(targetEmail), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              _subject: '[2S PRODUCTION] Yêu cầu báo giá từ ' + inquiryData.company + ' - ' + inquiryData.name + ' (' + inquiryData.phone + ')',
+              _replyto: inquiryData.email,
+              _template: 'table',
+              _captcha: 'false',
+              'Doanh Nghiệp / Khách Hàng': inquiryData.company,
+              'Người Liên Hệ & Chức Vụ': inquiryData.name,
+              'Số Điện Thoại / Zalo': inquiryData.phone,
+              'Email Khách Hàng': inquiryData.email,
+              'Loại Hình Sự Kiện': inquiryData.service,
+              'Quy Mô / Địa Điểm / Yêu Cầu': inquiryData.note || '(Không có)',
+              'Thời Gian Gửi': inquiryData.time
+            })
+          });
+        } catch (fsErr) {
+          console.log('FormSubmit fetch notice:', fsErr);
+        }
+
+        // 3. Gửi qua Backend Cloudflare Pages Function /api/inquiry (khi chạy trên Cloudflare Pages)
         let backendSent = false;
         try {
           const res = await fetch('/api/inquiry', {
