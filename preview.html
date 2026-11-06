@@ -1911,118 +1911,47 @@
         ? (slide.btnTextVi || 'Khám Phá Dự Án')
         : (slide.btnTextEn || 'Discover Our Work');
 
-      const secTitles = {
-        hero: 'Banner Hero Slider',
-        services: 'Dịch Vụ Nổi Bật',
-        approach: 'Triết Lý Hoạt Động',
-        works: 'Dự Án Tiêu Biểu (Lookbook)',
-        cta: 'Tư Vấn Khách Hàng B2B',
-        clients: 'Đối Tác Đồng Hành (Clients)',
-        news: 'Tin Tức & Cẩm Nang'
-      };
-
       const sectionsMap = {
         hero: vis.hero !== false ? `
           <section class="mockup-hero" style="background-image:url('${slide.image}')">
             <div class="mockup-hero-overlay"></div>
+
+            ${isAdmin ? `
+              <!-- THANH NÚT ĐIỀU KHIỂN SLIDE HERO TINH TẾ (GIỮ NGUYÊN 100% KHUNG & CSS GỐC) -->
+              <div style="position:absolute;top:90px;right:24px;z-index:30;display:flex;gap:8px;background:rgba(10,19,36,0.85);backdrop-filter:blur(10px);padding:6px 14px;border-radius:9999px;border:1px solid #D6B779;box-shadow:0 6px 20px rgba(0,0,0,0.4);align-items:center">
+                <span style="font-size:0.72rem;color:#D6B779;font-weight:800;letter-spacing:0.5px">HERO SLIDE #${state.activeHeroIdx + 1}</span>
+                <button type="button" class="btn-ystg btn-ystg-gold btn-ystg-sm" data-action="change-current-hero-slide-img" style="padding:4px 10px;font-size:0.72rem">
+                  📷 Đổi Ảnh Nền
+                </button>
+                <button type="button" class="btn-ystg btn-ystg-white btn-ystg-sm" data-action="add-hero-slide" style="padding:4px 10px;font-size:0.72rem">
+                  ＋ Thêm Slide
+                </button>
+                ${slides.length > 1 ? `
+                  <button type="button" class="block-ctrl-btn" data-action="delete-current-hero-slide" style="color:#e11d48;border-color:#fda4af;padding:4px 8px;font-size:0.72rem" title="Xóa slide này">
+                    ✕ Xóa Slide
+                  </button>
+                ` : ''}
+                <button type="button" class="btn-ystg btn-ystg-navy btn-ystg-sm" data-nav="admin" style="padding:4px 10px;font-size:0.72rem">
+                  ⚙️ Admin
+                </button>
+              </div>
+            ` : ''}
+
             <div class="container" style="position:relative;z-index:2">
               <div class="mockup-hero-content">
-                ${isAdmin ? `
-                  <!-- KHỐI CHỈNH SỬA TRỰC TIẾP SLIDE HERO (ADMIN LIVE EDITOR) -->
-                  <div style="background:rgba(10,19,36,0.85);border:1px solid #D6B779;border-radius:10px;padding:22px 26px;box-shadow:0 8px 30px rgba(0,0,0,0.5);margin-bottom:24px;backdrop-filter:blur(10px);max-width:820px">
-                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;border-bottom:1px solid rgba(214,183,121,0.25);padding-bottom:12px">
-                      <div style="display:flex;align-items:center;gap:8px">
-                        <span style="background:linear-gradient(135deg,#D6B779,#8C6B28);color:#0E1722;padding:3px 8px;border-radius:4px;font-size:0.72rem;font-weight:900">HERO SLIDE #${state.activeHeroIdx + 1}</span>
-                        <span style="color:#FFFFFF;font-size:0.85rem;font-weight:700">Chỉnh Sửa Trực Tiếp Trên Slide</span>
-                      </div>
-                      <div style="display:flex;gap:6px;align-items:center">
-                        ${slides.map((sItem, sIdx) => `
-                          <button type="button" class="block-ctrl-btn ${sIdx === state.activeHeroIdx ? 'active' : ''}" data-action="go-hero-slide" data-idx="${sIdx}" style="padding:3px 9px;font-size:0.75rem">
-                            #${sIdx + 1}
-                          </button>
-                        `).join('')}
-                        <button type="button" class="btn-ystg btn-ystg-white btn-ystg-sm" data-action="add-hero-slide" style="padding:3px 8px;font-size:0.72rem">
-                          ＋ Thêm Slide
-                        </button>
-                        ${slides.length > 1 ? `
-                          <button type="button" class="block-ctrl-btn" style="color:#e11d48;border-color:#fda4af;padding:3px 8px;font-size:0.72rem" data-action="delete-current-hero-slide" title="Xóa slide này">
-                            ✕ Xóa
-                          </button>
-                        ` : ''}
-                      </div>
-                    </div>
+                <h1 class="mockup-hero-title reveal">
+                  <span ${isAdmin ? 'contenteditable="true" data-home-slide-direct="titleMain" data-slide-idx="' + state.activeHeroIdx + '" spellcheck="false" style="outline:none;cursor:text" title="Nhấp vào để sửa chữ trực tiếp"' : ''}>${heroTitleMain}</span><br/>
+                  <span ${isAdmin ? 'contenteditable="true" data-home-slide-direct="titleStroke" data-slide-idx="' + state.activeHeroIdx + '" spellcheck="false" style="outline:none;cursor:text" title="Nhấp vào để sửa chữ nổi bật trực tiếp"' : ''}>${heroTitleStroke}</span>
+                </h1>
+                <p class="mockup-hero-sub reveal delay-1" ${isAdmin ? 'contenteditable="true" data-home-slide-direct="subVi" data-slide-idx="' + state.activeHeroIdx + '" spellcheck="false" style="outline:none;cursor:text" title="Nhấp vào để sửa đoạn mô tả trực tiếp"' : ''}>
+                  ${heroSub}
+                </p>
 
-                    <div style="margin-bottom:12px">
-                      <label style="display:block;font-size:0.72rem;color:#D6B779;font-weight:800;margin-bottom:4px;letter-spacing:1px">TIÊU ĐỀ DÒNG 1 (VD: CREATE MOMENTS):</label>
-                      <input
-                        type="text"
-                        class="admin-input"
-                        style="font-size:clamp(1.3rem,2.8vw,2.1rem);font-weight:900;background:rgba(15,26,42,0.9);color:#FFFFFF;border-color:#D6B779;padding:8px 12px;width:100%;font-family:'Plus Jakarta Sans',sans-serif"
-                        value="${heroTitleMain}"
-                        data-home-slide-direct="titleMain"
-                        data-slide-idx="${state.activeHeroIdx}"
-                        placeholder="Nhập tiêu đề dòng 1..."
-                      />
-                    </div>
-
-                    <div style="margin-bottom:14px">
-                      <label style="display:block;font-size:0.72rem;color:#D6B779;font-weight:800;margin-bottom:4px;letter-spacing:1px">TIÊU ĐỀ NỔI BẬT DÒNG 2 (VD: MAKE THEM MATTER):</label>
-                      <input
-                        type="text"
-                        class="admin-input"
-                        style="font-size:clamp(1.3rem,2.8vw,2.1rem);font-weight:900;background:rgba(15,26,42,0.9);color:#D6B779;border-color:#D6B779;padding:8px 12px;width:100%;font-family:'Plus Jakarta Sans',sans-serif"
-                        value="${heroTitleStroke}"
-                        data-home-slide-direct="titleStroke"
-                        data-slide-idx="${state.activeHeroIdx}"
-                        placeholder="Nhập tiêu đề dòng 2..."
-                      />
-                    </div>
-
-                    <div style="margin-bottom:14px">
-                      <label style="display:block;font-size:0.72rem;color:#D6B779;font-weight:800;margin-bottom:4px;letter-spacing:1px">ĐOẠN MÔ TẢ GIỚI THIỆU SLIDE:</label>
-                      <textarea
-                        rows="2"
-                        class="admin-textarea"
-                        style="font-size:0.92rem;line-height:1.6;background:rgba(15,26,42,0.9);color:#E2E8F0;border-color:rgba(214,183,121,0.5);width:100%"
-                        data-home-slide-direct="subVi"
-                        data-slide-idx="${state.activeHeroIdx}"
-                        placeholder="Nhập đoạn mô tả giới thiệu..."
-                      >${heroSub}</textarea>
-                    </div>
-
-                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-                      <div style="display:flex;align-items:center;gap:8px">
-                        <span style="font-size:0.72rem;color:#D6B779;font-weight:800">NÚT BẤM (CTA):</span>
-                        <input
-                          type="text"
-                          class="admin-input"
-                          style="font-size:0.82rem;font-weight:800;background:rgba(15,26,42,0.9);color:#D6B779;border-color:#D6B779;width:160px"
-                          value="${heroBtn}"
-                          data-home-slide-direct="btnTextVi"
-                          data-slide-idx="${state.activeHeroIdx}"
-                          placeholder="Chữ trên nút..."
-                        />
-                      </div>
-                      <button type="button" class="btn-ystg btn-ystg-gold btn-ystg-sm" data-action="change-current-hero-slide-img">
-                        📷 Thay Ảnh Nền Slide Này
-                      </button>
-                    </div>
-                  </div>
-                ` : `
-                  <h1 class="mockup-hero-title reveal">
-                    ${heroTitleMain}<br/>
-                    <span>${heroTitleStroke}</span>
-                  </h1>
-                  <p class="mockup-hero-sub reveal delay-1">
-                    ${heroSub}
-                  </p>
-
-                  <div class="reveal delay-2">
-                    <button type="button" class="btn-gold-pill" data-nav="work">
-                      ${heroBtn} <span>&rarr;</span>
-                    </button>
-                  </div>
-                `}
+                <div class="reveal delay-2">
+                  <button type="button" class="btn-gold-pill" data-nav="work">
+                    ${heroBtn} <span>&rarr;</span>
+                  </button>
+                </div>
 
                 <div class="mockup-hero-slider reveal delay-3">
                   <div class="hero-slider-counter">
@@ -2046,91 +1975,110 @@
         ` : '',
 
         services: vis.services !== false ? `
-          <section class="ystg-section-light" style="padding:88px 0 96px">
+          <section class="mockup-services-section">
             <div class="container">
-              <div class="ystg-sec-head text-center reveal">
-                <span class="ystg-eyebrow">
-                  ${isVi ? 'GIẢI PHÁP TỔ CHỨC & SẢN XUẤT' : 'SOLUTIONS & PRODUCTION'} • ${s.domain}
-                </span>
-                <h2 class="ystg-sec-title">
-                  ${isVi ? 'Dịch Vụ Sự Kiện & Sản Xuất Hình Ảnh' : 'Event Services & Media Production'}
-                </h2>
-                <div class="title-gold-accent"></div>
-                <p class="ystg-sec-desc">
-                  ${isVi
-                    ? 'Từ tiệc tất niên, khai trương, hội nghị MICE đến sản xuất visual đa giác quan — chúng tôi kiến tạo những cột mốc truyền cảm hứng.'
-                    : 'From gala dinners, grand openings, to MICE conferences and sensory visuals — we craft inspiring corporate milestones.'}
-                </p>
-              </div>
-
-              <div class="ystg-services-grid">
-                ${cms.services.map((srv, idx) => `
-                  <article class="ystg-service-item reveal delay-${(idx % 3) + 1}">
-                    <div class="ystg-service-thumb">
-                      <img class="lazy-img" src="${srv.image}" alt="${isVi ? srv.titleVi : srv.titleEn}" loading="lazy" decoding="async" />
-                      <div class="ystg-service-thumb-overlay"></div>
-                      <span class="ystg-service-num">${srv.num}</span>
-                    </div>
-                    <div class="ystg-service-body">
-                      <h3 class="ystg-service-title">${isVi ? srv.titleVi : srv.titleEn}</h3>
-                      <p class="ystg-service-desc">${isVi ? srv.shortDescVi : srv.shortDescEn}</p>
-                      <button type="button" class="btn-outline-pill btn-ystg-sm" data-nav="service-detail" data-id="${srv.id}">
-                        ${isAdmin ? '✎ Mở Sửa Dịch Vụ ↗' : (isVi ? 'Xem Chi Tiết ↗' : 'View Service ↗')}
-                      </button>
-                    </div>
-                  </article>
-                `).join('')}
+              <div class="mockup-services-grid">
+                <div class="reveal reveal-left">
+                  <span class="mockup-eyebrow">${isVi ? ((h.servicesStrip && h.servicesStrip.eyebrowVi) || 'DỊCH VỤ CỦA CHÚNG TÔI') : ((h.servicesStrip && h.servicesStrip.eyebrowEn) || 'OUR SERVICES')}</span>
+                  <h2 class="mockup-services-title">${isVi ? ((h.servicesStrip && h.servicesStrip.titleVi) || 'Từ ý tưởng thiết kế<br>đến đại tiệc hoàn mỹ') : ((h.servicesStrip && h.servicesStrip.titleEn) || 'From concept<br>to celebration')}</h2>
+                </div>
+                <div class="mockup-services-items reveal reveal-right">
+                  ${((h.servicesStrip && h.servicesStrip.items) || [
+                    { titleVi: 'Sự Kiện Doanh Nghiệp', titleEn: 'Corporate Events', icon: 'bloom', nav: 'services' },
+                    { titleVi: 'Dạ Tiệc Gala Dinner', titleEn: 'Gala Dinner', icon: 'glasses', nav: 'services' },
+                    { titleVi: 'Kích Hoạt Thương Hiệu', titleEn: 'Brand Activation', icon: 'arch', nav: 'services' },
+                    { titleVi: 'Tiệc Cưới & Sự Kiện Riêng', titleEn: 'Wedding & Private Events', icon: 'rings', nav: 'services' },
+                    { titleVi: 'Sản Xuất & Vận Hành Sự Kiện', titleEn: 'Event Planning & Production', icon: 'calendar', nav: 'services' }
+                  ]).map(item => `
+                    <button type="button" class="mockup-service-col" data-nav="${item.nav || 'services'}">
+                      <div class="mockup-service-icon">
+                        ${getMockupServiceIcon(item.icon)}
+                      </div>
+                      <div class="mockup-service-name">${isVi ? (item.titleVi || item.title) : (item.titleEn || item.title)}</div>
+                    </button>
+                  `).join('')}
+                </div>
               </div>
             </div>
           </section>
         ` : '',
 
-        approach: vis.approach !== false ? `
-          <section class="mockup-approach">
+        approach: (vis.approach !== false || vis.stats !== false) ? `
+          <section class="mockup-about-section">
             <div class="container">
-              <div class="ystg-sec-head text-center reveal">
-                <span class="ystg-eyebrow">${isVi ? 'TRIẾT LÝ HOẠT ĐỘNG' : 'OUR PHILOSOPHY'}</span>
-                <h2 class="ystg-sec-title">${isVi ? app.titleVi : app.titleEn}</h2>
-                <div class="title-gold-accent"></div>
-                <p class="ystg-sec-desc">${isVi ? app.subVi : app.subEn}</p>
-              </div>
-
-              <div class="mockup-approach-grid">
-                ${(app.pillars || []).map((p, idx) => `
-                  <div class="approach-card reveal delay-${idx + 1}">
-                    <div class="approach-num">0${idx + 1}</div>
-                    <h3 class="approach-title">${isVi ? p.titleVi : p.titleEn}</h3>
-                    <p class="approach-desc">${isVi ? p.descVi : p.descEn}</p>
-                  </div>
-                `).join('')}
+              <div class="mockup-about-grid">
+                <div class="mockup-about-img-wrap reveal reveal-left">
+                  <img src="${app.image || 'https://images.unsplash.com/photo-1519225429411-a8894d01073b?auto=format&fit=crop&w=900&q=85'}" alt="About 2S Production" loading="lazy" />
+                </div>
+                <div class="mockup-about-center reveal">
+                  <span class="mockup-eyebrow">${isVi ? (app.eyebrowVi || 'VỀ 2S PRODUCTION') : (app.eyebrowEn || 'ABOUT 2S PRODUCTION')}</span>
+                  <h2 class="mockup-about-title">${isVi ? (app.titleVi || 'Đối tác sáng tạo cho những sự kiện mang tầm vóc') : (app.titleEn || 'A creative partner for meaningful events')}</h2>
+                  <p class="mockup-about-p">${isVi ? (app.descVi || app.desc) : (app.descEn || app.desc)}</p>
+                  <button type="button" class="btn-outline-pill" data-nav="about">
+                    ${isVi ? (app.btnTextVi || 'Tìm Hiểu Thêm') : (app.btnTextEn || 'Learn More')} <span>&rarr;</span>
+                  </button>
+                </div>
+                <div class="mockup-about-stats reveal reveal-right">
+                  ${(app.stats || [
+                    { num: '500+', labelVi: 'Sự Kiện Thành Công', labelEn: 'Successful Events' },
+                    { num: '100+', labelVi: 'Khách Hàng Hài Lòng', labelEn: 'Happy Clients' },
+                    { num: '10+', labelVi: 'Năm Kinh Nghiệm', labelEn: 'Years of Experience' }
+                  ]).map(st => `
+                    <div class="mockup-stat-item">
+                      <div class="mockup-stat-num">${st.num}</div>
+                      <div class="mockup-stat-lbl">${isVi ? (st.labelVi || st.label) : (st.labelEn || st.label)}</div>
+                    </div>
+                  `).join('')}
+                </div>
               </div>
             </div>
           </section>
         ` : '',
 
         works: vis.works !== false ? `
-          <section class="ystg-section-light" style="padding:96px 0 108px">
+          <section class="mockup-works-section">
             <div class="container">
-              <div class="ystg-sec-head text-center reveal">
-                <span class="ystg-eyebrow">${isVi ? 'DỰ ÁN ĐÃ THỰC HIỆN' : 'SELECTED PORTFOLIO'} • ${s.domain}</span>
-                <h2 class="ystg-sec-title">${isVi ? 'Dự Án Sự Kiện Tiêu Biểu' : 'Featured Event Production'}</h2>
-                <div class="title-gold-accent"></div>
-                <p class="ystg-sec-desc">
-                  ${isVi
-                    ? 'Dấu ấn 2S Production qua những sự kiện quy mô từ hàng trăm đến hàng nghìn khách tại Đà Nẵng, Hội An và miền Trung.'
-                    : '2S Production hallmarks across high-profile gatherings from hundreds to thousands of attendees across Vietnam.'}
-                </p>
+              <div class="mockup-works-head reveal">
+                <div>
+                  <span class="mockup-eyebrow">${isVi ? ((h.worksShowcase && h.worksShowcase.eyebrowVi) || 'DỰ ÁN TIÊU BIỂU') : ((h.worksShowcase && h.worksShowcase.eyebrowEn) || 'OUR WORKS')}</span>
+                  <h2 class="mockup-works-title">${isVi ? ((h.worksShowcase && h.worksShowcase.titleVi) || 'Những khoảnh khắc chúng tôi kiến tạo nên') : ((h.worksShowcase && h.worksShowcase.titleEn) || 'Moments we have brought to life')}</h2>
+                </div>
+                <button type="button" class="mockup-works-all-link" data-nav="work">
+                  ${isVi ? ((h.worksShowcase && h.worksShowcase.btnTextVi) || 'Xem Tất Cả Dự Án') : ((h.worksShowcase && h.worksShowcase.btnTextEn) || 'View All Projects')} <span>&rarr;</span>
+                </button>
               </div>
 
-              <div class="lookbook-gallery-grid">
-                ${(cms.works || []).slice(0, 6).map((item, idx) => `
-                  <div class="lookbook-item-card reveal delay-${(idx % 3) + 1}" data-nav="work-detail" data-id="${item.id}" style="cursor:pointer">
-                    <img class="lazy-img" src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" />
-                    <div class="lookbook-item-overlay">
-                      <span class="lookbook-item-tag">${item.category || 'Event'}</span>
-                      <h4 class="lookbook-item-title">${item.title}</h4>
-                      <p class="lookbook-item-meta">${item.location || 'Đà Nẵng'} • ${item.scale || 'Sự kiện cao cấp'}</p>
-                      <span class="lookbook-item-cta">${isAdmin ? '✎ Mở Sửa Dự Án ↗' : (isVi ? 'Xem Dự Án ↗' : 'View Work ↗')}</span>
+              <div class="mockup-works-grid reveal delay-1">
+                ${((h.worksShowcase && h.worksShowcase.items) || [
+                  {
+                    id: 'work-1',
+                    titleVi: 'Đại Tiệc Gala Dinner & Hội Nghị Quốc Tế',
+                    titleEn: 'Grand Gala Ballroom & Summit',
+                    image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1000&q=80'
+                  },
+                  {
+                    id: 'work-2',
+                    titleVi: 'Sân Vườn Đương Đại & Pavilion Cây Xanh',
+                    titleEn: 'Modern Courtyard & Tree Pavilion',
+                    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80'
+                  },
+                  {
+                    id: 'work-3',
+                    titleVi: 'Đại Nhạc Hội & Hệ Thống Ánh Sáng Beam',
+                    titleEn: 'Arena Concert & Stage Beams',
+                    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1000&q=80'
+                  },
+                  {
+                    id: 'work-4',
+                    titleVi: 'Lối Đi Lễ Đường Hoa Tươi Sang Trọng',
+                    titleEn: 'Floral Arch Luxury Wedding Aisle',
+                    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80'
+                  }
+                ]).map((w, idx) => `
+                  <div class="mockup-work-card" data-action="open-lightbox" data-idx="${idx}">
+                    <img src="${w.image}" alt="${isVi ? (w.titleVi || w.title) : (w.titleEn || w.title)}" loading="lazy" />
+                    <div class="overlay">
+                      <span class="title">${isVi ? (w.titleVi || w.title) : (w.titleEn || w.title)}</span>
                     </div>
                   </div>
                 `).join('')}
@@ -2140,50 +2088,48 @@
         ` : '',
 
         cta: vis.cta !== false ? `
-          <section class="mockup-concierge" style="padding:88px 0;background:#0E1826;position:relative;overflow:hidden">
-            <div class="container" style="position:relative;z-index:2;text-align:center">
-              <span class="ystg-eyebrow" style="color:#D6B779">
-                ${isVi ? 'KẾT NỐI TRỰC TIẾP' : 'GET IN TOUCH'} • ${s.domain}
-              </span>
-              <h2 style="font-size:clamp(1.8rem,3vw,2.5rem);font-weight:800;color:#FFFFFF;margin:12px 0 16px;font-family:'Plus Jakarta Sans',sans-serif">
-                ${isVi ? 'Cùng 2S Production Kiến Tạo Sự Kiện Đẳng Cấp Tiếp Theo' : 'Craft Your Next Signature Event With 2S Production'}
-              </h2>
-              <p style="color:#CBD5E1;max-width:680px;margin:0 auto 28px;font-size:0.96rem;line-height:1.7">
-                ${isVi
-                  ? 'Liên hệ trực tiếp với Ban Đạo Diễn & Sản Xuất để nhận ý tưởng kịch bản độc bản và dự toán chi phí tối ưu nhất cho doanh nghiệp.'
-                  : 'Contact our executive directors for bespoke event concepts and optimal production budget estimates.'}
-              </p>
-              <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
-                <button type="button" class="btn-ystg btn-ystg-gold" data-nav="contact">
-                  ${isVi ? 'Nhận Báo Giá Dự Án ↗' : 'Request Proposal ↗'}
-                </button>
-                <a href="https://zalo.me/${s.zalo}" target="_blank" rel="noopener" class="btn-ystg btn-ystg-white" style="text-decoration:none">
-                  💬 Chat Zalo: ${s.phoneDisplay}
-                </a>
+          <section class="mockup-cta-section">
+            <div class="container">
+              <div class="mockup-cta-banner reveal">
+                <div class="mockup-cta-left">
+                  <h2 class="mockup-cta-title">${isVi ? ((h.cta && h.cta.titleVi) || 'Cùng nhau kiến tạo nên những điều phi thường.') : ((h.cta && h.cta.titleEn) || 'Let’s create something extraordinary together.')}</h2>
+                  <button type="button" class="btn-gold-pill" data-nav="contact">
+                    ${isVi ? ((h.cta && h.cta.btnTextVi) || 'Tư Vấn & Báo Giá') : ((h.cta && h.cta.btnTextEn) || 'Get in Touch')} <span>&rarr;</span>
+                  </button>
+                </div>
+                <div class="mockup-cta-right">
+                  <img src="${(h.cta && h.cta.image) || 'https://images.unsplash.com/photo-1525268771113-32d9e9021a97?auto=format&fit=crop&w=900&q=85'}" alt="Event Production Floral Arch" loading="lazy" />
+                </div>
               </div>
             </div>
           </section>
         ` : '',
 
         clients: vis.clients !== false ? `
-          <section class="ystg-section-light" style="padding:88px 0 96px">
-            <div class="container">
-              <div class="ystg-sec-head text-center reveal">
-                <span class="ystg-eyebrow">${isVi ? 'KHÁCH HÀNG & ĐỐI TÁC' : 'TRUSTED BY ENTERPRISES'}</span>
-                <h2 class="ystg-sec-title">${isVi ? 'Đồng Hành Cùng Các Thương Hiệu Hàng Đầu' : 'Trusted by Leading Brands'}</h2>
-                <div class="title-gold-accent"></div>
-                <p class="ystg-sec-desc">
-                  ${isVi
-                    ? 'Sự tin tưởng của hàng trăm tập đoàn trong và ngoài nước là minh chứng rõ nhất cho chất lượng sản xuất của 2S Production.'
-                    : 'The trust of hundreds of leading corporations validates 2S Production dedication to world-class event execution.'}
+          <section class="ystg-clients-marquee-section" style="padding:68px 0;position:relative;overflow:hidden;background:#0E1A29">
+            ${(h.clientsShowBg && h.clientsBgImage) ? `
+              <div class="clients-bg-stage" style="background-image:url('${h.clientsBgImage}')"></div>
+              <div class="clients-bg-overlay"></div>
+            ` : ''}
+            <div class="container" style="position:relative;z-index:2">
+              <div style="text-align:center;max-width:760px;margin:0 auto 38px">
+                <span class="mockup-eyebrow" style="margin-bottom:10px;color:#D6B779;letter-spacing:2px">${isVi ? (h.clientsEyebrowVi || 'ĐỐI TÁC DOANH NGHIỆP') : (h.clientsEyebrowEn || h.clientsEyebrow || 'TRUSTED ENTERPRISE PARTNERS')}</span>
+                <h3 style="font-family:'Playfair Display',serif;font-size:clamp(1.35rem, 2.3vw, 1.85rem);color:#FFFFFF;font-weight:700;line-height:1.3;margin:0 0 10px">
+                  ${isVi ? (h.clientsTitleVi || h.clientsTitle || 'Đồng Hành Cùng Các Đối Tác Hàng Đầu') : (h.clientsTitleEn || 'Partnering With 350+ Leading Enterprises & Brands')}
+                </h3>
+                <p style="color:rgba(255,255,255,0.85);font-size:0.92rem;line-height:1.65;margin:0 auto;max-width:680px">
+                  ${isVi ? (h.clientsDescVi || h.clientsDesc || 'Chuẩn mực vận hành khắt khe cho các kỳ Đại hội Cổ đông, Hội nghị Quốc tế và Lễ ra mắt trọng điểm') : (h.clientsDescEn || 'Delivering rigorous standards and exceptional event production for industry leaders')}
                 </p>
               </div>
 
-              <div class="clients-grid-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-top:36px">
-                ${(Array.isArray(h.clients) ? h.clients : (h.clients && Array.isArray(h.clients.list)) ? h.clients.list : (DEFAULT_DATA.home.clients || [])).map((cl, idx) => `
-                  <div class="client-logo-box reveal delay-${(idx % 4) + 1}" style="background:rgba(231,233,237,0.7);border:1px solid rgba(23,35,52,0.1);padding:24px 16px;border-radius:8px;text-align:center;box-shadow:0 4px 14px rgba(16,30,54,0.04);backdrop-filter:blur(8px)">
-                    <strong style="color:var(--text-deep-ink);font-size:0.95rem;display:block">${cl.name}</strong>
-                    ${cl.industry ? `<span style="font-size:0.75rem;color:#64748B;display:block;margin-top:4px">${cl.industry}</span>` : ''}
+              <div class="clients-logo-grid">
+                ${(h.clients && h.clients.length ? h.clients : DEFAULT_DATA.home.clients).map(c => `
+                  <div class="client-logo-item" style="${c.photo ? `background-image:linear-gradient(180deg,rgba(30,55,90,0.65) 0%,rgba(16,30,54,0.92) 100%),url('${c.photo}');background-size:cover;background-position:center` : ''}">
+                    <div style="height:44px;display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+                      <img src="${c.logo}" alt="${c.name}" style="max-height:38px;max-width:130px;object-fit:contain;filter:brightness(0) invert(1)" loading="lazy" />
+                    </div>
+                    <div style="font-weight:700;font-size:0.8rem;color:#FFFFFF;letter-spacing:1px">${c.name}</div>
+                    <div style="font-size:0.68rem;color:#D6B779;margin-top:2px">${c.sub || ''}</div>
                   </div>
                 `).join('')}
               </div>
@@ -2192,35 +2138,31 @@
         ` : '',
 
         news: vis.news !== false ? `
-          <section class="ystg-section-light" style="padding:88px 0 100px;background:#E7E9ED">
+          <section class="ystg-section-light" style="padding-top:70px">
             <div class="container">
-              <div class="ystg-sec-head text-center reveal">
-                <span class="ystg-eyebrow">${isVi ? 'TIN TỨC & GÓC CHUYÊN GIA' : 'INSIGHTS & NEWS'} • ${s.domain}</span>
-                <h2 class="ystg-sec-title">${isVi ? 'Tin Tức & Cẩm Nang Tổ Chức Sự Kiện' : 'Event Management Insights'}</h2>
-                <div class="title-gold-accent"></div>
-                <p class="ystg-sec-desc">
-                  ${isVi
-                    ? 'Xu hướng sự kiện mới nhất, cẩm nang quản trị rủi ro và kinh nghiệm thực chiến từ Ban Đạo Diễn 2S Production.'
-                    : 'Latest event trends, risk management guides and battle-tested insights from 2S Production directors.'}
-                </p>
+              <div class="ystg-section-head reveal" style="margin-bottom:28px">
+                <div>
+                  <span class="mockup-eyebrow">${isVi ? 'GÓC NHÌN & TIN TỨC SỰ KIỆN' : 'STORIES & INSIGHTS'}</span>
+                  <h2 class="mockup-works-title">${isVi ? 'Góc Nhìn Chuyên Gia & Tin Tức Sự Kiện' : 'Expert Insights & Event Highlights'}</h2>
+                </div>
+                <button type="button" class="mockup-works-all-link" data-nav="news">
+                  ${isVi ? `Xem Tất Cả Tin Tức (${cms.articles.length}) ↗` : `View All Stories (${cms.articles.length}) ↗`}
+                </button>
               </div>
-
-              <div class="news-grid" style="margin-top:36px">
-                ${(cms.articles || []).slice(0, 3).map((art, idx) => `
-                  <article class="news-card reveal delay-${idx + 1}" data-nav="news-detail" data-id="${art.id}" style="cursor:pointer">
-                    <div class="news-card-thumb">
-                      <img class="lazy-img" src="${art.coverImage || art.image}" alt="${art.title}" loading="lazy" decoding="async" />
-                      <span class="news-card-badge">${art.category}</span>
+              <div class="ystg-work-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px">
+                ${cms.articles.slice(0, 3).map(art => `
+                  <article class="ystg-work-card" data-nav="news-detail" data-id="${art.id}">
+                    <div class="ystg-work-img lazy-wrap">
+                      <img src="${art.coverImage}" alt="${isVi ? art.titleVi : (art.titleEn || art.titleVi)}" loading="lazy" />
                     </div>
-                    <div class="news-card-body">
-                      <div class="news-card-meta">
-                        <span>📅 ${art.date}</span>
-                        <span>⏱️ ${art.readTime}</span>
-                      </div>
-                      <h3 class="news-card-title">${art.title}</h3>
-                      <p class="news-card-excerpt">${art.excerpt || art.summary}</p>
-                      <button type="button" class="btn-outline-pill btn-ystg-sm" style="align-self:flex-start">
-                        ${isAdmin ? '✎ Mở Sửa Bài Viết ↗' : (isVi ? 'Đọc Tiếp ↗' : 'Read More ↗')}
+                    <div class="ystg-work-body">
+                      <div class="ystg-work-cat">${art.date} • ${art.author}</div>
+                      <h3 class="ystg-work-title">${isVi ? art.titleVi : (art.titleEn || art.titleVi)}</h3>
+                      <p style="color:#576b82;font-size:0.83rem;line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">
+                        ${isVi ? art.excerptVi : (art.excerptEn || art.excerptVi)}
+                      </p>
+                      <button type="button" class="btn-ystg btn-ystg-outline btn-ystg-sm" style="align-self:flex-start">
+                        ${isVi ? 'Đọc Tiếp ↗' : 'Read More ↗'}
                       </button>
                     </div>
                   </article>
@@ -2232,68 +2174,18 @@
       };
 
       return `
+        ${sectionOrder.map(secKey => sectionsMap[secKey] || '').join('')}
         ${isAdmin ? `
-          <!-- THANH ĐIỀU HƯỚNG QUẢN TRỊ NỔI TRÊN ĐẦU TRANG CHỦ -->
-          <div class="home-admin-toolbar" style="background:#0F1A2A;border-bottom:2px solid #D6B779;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:sticky;top:68px;z-index:90;box-shadow:0 6px 20px rgba(0,0,0,0.3)">
-            <div style="display:flex;align-items:center;gap:10px">
-              <span style="background:linear-gradient(135deg,#D6B779,#8C6B28);color:#0E1722;padding:4px 10px;border-radius:4px;font-size:0.75rem;font-weight:900">ADMIN LIVE EDITOR</span>
-              <span style="color:#FFFFFF;font-size:0.88rem;font-weight:700">Chỉnh Sửa Trực Tiếp Trên Trang Chủ</span>
-              <span style="color:#10B981;font-size:0.75rem;font-weight:700;background:rgba(16,185,129,0.15);padding:3px 8px;border-radius:4px">✔ Tự động lưu khi gõ</span>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-              <button type="button" class="btn-ystg btn-ystg-gold btn-ystg-sm" data-action="change-current-hero-slide-img">
-                📷 Thay Ảnh Nền Slide Này
-              </button>
-              <button type="button" class="btn-ystg btn-ystg-white btn-ystg-sm" data-action="add-hero-slide">
-                ＋ Thêm Slide Hero
-              </button>
-              ${slides.length > 1 ? `
-                <button type="button" class="block-ctrl-btn" data-action="delete-current-hero-slide" style="color:#e11d48;border-color:#fda4af;padding:4px 10px;font-size:0.75rem">
-                  🗑 Xóa Slide Này
-                </button>
-              ` : ''}
-              <button type="button" class="btn-ystg btn-ystg-navy btn-ystg-sm" data-nav="admin">
-                ⚙️ Vào Trang Quản Trị Hệ Thống
-              </button>
-            </div>
+          <!-- NÚT ĐIỀU HÀNH ADMIN NHỎ GỌN TẠI GÓC MÀN HÌNH -->
+          <div style="position:fixed;bottom:24px;left:24px;z-index:99">
+            <button type="button" class="btn-ystg btn-ystg-navy" data-nav="admin" style="box-shadow:0 8px 24px rgba(0,0,0,0.5);border:1px solid #D6B779;padding:10px 18px;border-radius:9999px;font-size:0.82rem;font-weight:700;display:flex;align-items:center;gap:8px">
+              <span>⚙️</span> Trang Quản Trị Hệ Thống
+            </button>
           </div>
         ` : ''}
-
-        ${sectionOrder.map((secKey, secIdx) => {
-          const secContent = sectionsMap[secKey];
-          if (!secContent) return '';
-          if (!isAdmin) return secContent;
-
-          // Trong chế độ Admin, thêm thanh công cụ sắp xếp và tác vụ nhanh phía trên mỗi mục
-          const secTitle = secTitles[secKey] || secKey.toUpperCase();
-          let extraBtns = '';
-          if (secKey === 'services') extraBtns = `<button type="button" class="btn-ystg btn-ystg-gold btn-ystg-sm" data-action="quick-create-service">＋ Tạo Dịch Vụ Mới</button>`;
-          if (secKey === 'works') extraBtns = `<button type="button" class="btn-ystg btn-ystg-gold btn-ystg-sm" data-action="quick-create-work">＋ Tạo Dự Án Mới</button>`;
-          if (secKey === 'clients') extraBtns = `<button type="button" class="btn-ystg btn-ystg-gold btn-ystg-sm" data-action="change-clients-backdrop">📷 Đổi Ảnh Nền Đối Tác</button>`;
-          if (secKey === 'news') extraBtns = `<button type="button" class="btn-ystg btn-ystg-gold btn-ystg-sm" data-action="quick-create-article">＋ Viết Bài Viết Mới</button>`;
-
-          return `
-            <div style="position:relative">
-              <div style="background:#0F1A2A;border:1px solid #D6B779;border-radius:6px;padding:8px 16px;margin:16px auto;max-width:1200px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;box-shadow:0 4px 12px rgba(0,0,0,0.25)">
-                <div style="display:flex;align-items:center;gap:8px">
-                  <span style="background:#D6B779;color:#0E1722;padding:2px 8px;border-radius:3px;font-size:0.72rem;font-weight:900">
-                    ${secTitle}
-                  </span>
-                  <span style="color:#CBD5E1;font-size:0.75rem">Thứ tự #${secIdx + 1}</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:6px">
-                  <button type="button" class="block-ctrl-btn" data-action="section-move" data-sec="${secKey}" data-dir="-1" title="Đẩy mục này lên trên">↑ Đẩy Lên</button>
-                  <button type="button" class="block-ctrl-btn" data-action="section-move" data-sec="${secKey}" data-dir="1" title="Đẩy mục này xuống dưới">↓ Đẩy Xuống</button>
-                  ${extraBtns}
-                </div>
-              </div>
-              ${secContent}
-            </div>
-          `;
-        }).join('')}
       `;
     }
-    // PAGE 2: ABOUT US
+
     function renderAboutPage() {
       const isVi = state.lang === 'vi';
       const s = cms.settings;
@@ -4900,6 +4792,29 @@
     }
 
     function bindEvents() {
+      // Lưu nội dung chỉnh sửa trực tiếp trên Hero Slide (contenteditable)
+      document.querySelectorAll('[data-home-slide-direct]').forEach(el => {
+        el.addEventListener('blur', e => {
+          const field = el.getAttribute('data-home-slide-direct');
+          const slideIdx = Number(el.getAttribute('data-slide-idx'));
+          const val = el.innerText.trim();
+          cms.home = cms.home || DEFAULT_DATA.home;
+          cms.home.slides = cms.home.slides || DEFAULT_DATA.home.slides;
+          if (cms.home.slides[slideIdx]) {
+            if (field === 'titleMain') {
+              cms.home.slides[slideIdx].titleMainVi = val;
+              cms.home.slides[slideIdx].titleMain = val;
+            } else if (field === 'titleStroke') {
+              cms.home.slides[slideIdx].titleStrokeVi = val;
+              cms.home.slides[slideIdx].titleStroke = val;
+            } else if (field === 'subVi') {
+              cms.home.slides[slideIdx].subVi = val;
+            }
+            saveCMSData(cms);
+            showCmsToast('✔ Đã lưu chỉnh sửa trên slide #' + (slideIdx + 1));
+          }
+        });
+      });
       document.getElementById('contactInquiryForm')?.addEventListener('submit', async e => {
         e.preventDefault();
         const submitBtn = e.target.querySelector('button[type="submit"]');
