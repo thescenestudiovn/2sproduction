@@ -1,13 +1,8 @@
-name = "2sproduction-web"
+name = "2sproduction"
 compatibility_date = "2026-01-01"
 pages_build_output_dir = "."
 
-# Kết nối Cloudflare R2 Bucket để lưu trữ hình ảnh sự kiện độ phân giải cao
-[[r2_buckets]]
-binding = "MEDIA_BUCKET"
-bucket_name = "2sproduction-media"
-
-# Kết nối Cloudflare KV để lưu dữ liệu bài viết Services & Our Work
+# Kết nối Cloudflare KV để lưu dữ liệu bài viết & yêu cầu báo giá
 [[kv_namespaces]]
 binding = "CMS_KV"
-id = "YOUR_CLOUDFLARE_KV_NAMESPACE_ID"
+id = "264a99ac32814544acc30dc1b99210a6"
