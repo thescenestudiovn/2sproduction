@@ -104,7 +104,7 @@ export async function onRequestPost(context) {
           </div>
         `;
 
-        const resendRes = await fetch('https://api.resend.com/emails', {
+        let resendRes = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${env.RESEND_API_KEY}`,
@@ -123,7 +123,29 @@ export async function onRequestPost(context) {
           emailSent = true;
           emailProvider = 'resend';
         } else {
-          console.error('Resend error:', await resendRes.text());
+          const errData = await resendRes.json().catch(() => ({}));
+          console.error('Resend error:', errData);
+          // Nếu Resend đang ở chế độ thử nghiệm (chỉ gửi được về email chủ tài khoản Resend 2splannervn@gmail.com)
+          if (errData && errData.statusCode === 403 && targetEmail !== '2splannervn@gmail.com') {
+            const fallbackRes = await fetch('https://api.resend.com/emails', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                from: env.EMAIL_FROM || '2S Production Concierge <onboarding@resend.dev>',
+                to: ['2splannervn@gmail.com'],
+                reply_to: email || undefined,
+                subject: `[YÊU CẦU BÁO GIÁ MỚI] ${company} - ${name} (${phone})`,
+                html: emailHtml
+              })
+            });
+            if (fallbackRes.ok) {
+              emailSent = true;
+              emailProvider = 'resend';
+            }
+          }
         }
       } catch (err) {
         console.error('Lỗi gọi Resend API:', err);
